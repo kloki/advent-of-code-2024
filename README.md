@@ -7,8 +7,8 @@
                     |___/
 ```
 
-Attempt Advent of code 2023 written in rust.
-https://adventofcode.com/2023
+Attempt Advent of code 2024 written in rust.
+https://adventofcode.com/2024
 
 # Test
 
