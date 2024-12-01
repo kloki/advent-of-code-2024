@@ -4,7 +4,7 @@ pub fn surrounding_coor(
     max_row: usize,
     max_column: usize,
 ) -> Vec<(usize, usize)> {
-    let mut coor: Vec<(usize, usize)> = Vec::new();
+    let mut coor: Vec<(usize, usize)> = Vec::with_capacity(8);
     if row > 0 {
         if column > 0 {
             coor.push((row - 1, column - 1));
@@ -41,7 +41,7 @@ pub fn neighbor_coor(
     max_row: usize,
     max_column: usize,
 ) -> Vec<(usize, usize)> {
-    let mut coor: Vec<(usize, usize)> = Vec::new();
+    let mut coor: Vec<(usize, usize)> = Vec::with_capacity(4);
     if row > 0 {
         coor.push((row - 1, column));
     }
