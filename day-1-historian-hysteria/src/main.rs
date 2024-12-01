@@ -1,4 +1,4 @@
-use std::{collections::HashMap, iter::zip};
+use std::iter::zip;
 
 use toolkit::{collections::hashmap::build_counts_hash_map, input::get_input};
 

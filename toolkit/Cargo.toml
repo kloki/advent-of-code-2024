@@ -10,3 +10,4 @@ path = "src/lib.rs"
 
 
 [dependencies]
+colorize = "0.1.0"

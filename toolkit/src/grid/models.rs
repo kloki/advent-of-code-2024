@@ -2,10 +2,10 @@ use std::fmt;
 
 use super::utils::{neighbor_coor, surrounding_coor};
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Coordinate {
-    row: usize,
-    column: usize,
+    pub row: usize,
+    pub column: usize,
 }
 
 impl From<(usize, usize)> for Coordinate {
@@ -176,7 +176,6 @@ mod tests {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        print!("{}", grid);
         dbg!(grid.get_surrounding((0, 1).into()));
         dbg!(grid.get_surrounding((0, 0).into()));
         dbg!(grid.get_surrounding((1, 1).into()));
