@@ -1,6 +1,6 @@
 use std::{collections::HashMap, iter::zip};
 
-use toolkit::input::get_input;
+use toolkit::{collections::hashmap::build_counts_hash_map, input::get_input};
 
 fn parse_content(input: String) -> (Vec<isize>, Vec<isize>) {
     input
@@ -23,13 +23,9 @@ fn find_total_distance(mut left: Vec<isize>, mut right: Vec<isize>) -> isize {
 }
 
 fn find_similarity_score(left: Vec<isize>, right: Vec<isize>) -> isize {
-    let mut counts_right: HashMap<isize, isize> = HashMap::new();
-    for r in right {
-        let counter = counts_right.entry(r).or_insert(0);
-        *counter += 1
-    }
+    let counts_right = build_counts_hash_map(right);
     left.iter()
-        .map(|l| l * counts_right.get(l).unwrap_or(&0))
+        .map(|l| l * (*counts_right.get(l).unwrap_or(&0) as isize))
         .sum()
 }
 
