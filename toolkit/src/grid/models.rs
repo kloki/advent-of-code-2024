@@ -18,16 +18,11 @@ impl From<(usize, usize)> for Coordinate {
 }
 
 #[derive(Clone, Debug)]
-pub struct Grid<T: Clone> {
+pub struct Grid<T> {
     pub grid: Vec<Vec<T>>,
 }
 
-impl<T: std::clone::Clone> Grid<T> {
-    pub fn new(rows: usize, columns: usize, placeholder: T) -> Grid<T> {
-        Grid {
-            grid: vec![vec![placeholder; columns]; rows],
-        }
-    }
+impl<T> Grid<T> {
     pub fn get(&self, coor: Coordinate) -> Option<&T> {
         if coor.column > self.max_column() || coor.row > self.max_row() {
             return None;
@@ -82,7 +77,7 @@ impl<T: std::clone::Clone> Grid<T> {
     }
 }
 
-impl<T: Clone> TryFrom<Vec<Vec<T>>> for Grid<T> {
+impl<T> TryFrom<Vec<Vec<T>>> for Grid<T> {
     type Error = &'static str;
 
     fn try_from(input: Vec<Vec<T>>) -> Result<Self, Self::Error> {
@@ -94,13 +89,13 @@ impl<T: Clone> TryFrom<Vec<Vec<T>>> for Grid<T> {
         }
     }
 }
-pub struct GridBorrow<'a, T: std::clone::Clone> {
+pub struct GridBorrow<'a, T> {
     grid: &'a Grid<T>,
     row: usize,
     col: usize,
 }
 
-impl<'a, T: Clone> IntoIterator for &'a Grid<T> {
+impl<'a, T> IntoIterator for &'a Grid<T> {
     type Item = (Coordinate, &'a T);
     type IntoIter = GridBorrow<'a, T>;
 
@@ -113,7 +108,7 @@ impl<'a, T: Clone> IntoIterator for &'a Grid<T> {
     }
 }
 
-impl<'a, T: Clone> Iterator for GridBorrow<'a, T> {
+impl<'a, T> Iterator for GridBorrow<'a, T> {
     type Item = (Coordinate, &'a T);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -130,7 +125,7 @@ impl<'a, T: Clone> Iterator for GridBorrow<'a, T> {
         Some((coor.into(), result))
     }
 }
-impl<T: Clone + std::fmt::Display> fmt::Display for Grid<T> {
+impl<T: std::fmt::Display> fmt::Display for Grid<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let payload = self
             .grid
@@ -176,9 +171,6 @@ mod tests {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        dbg!(grid.get_surrounding((0, 1).into()));
-        dbg!(grid.get_surrounding((0, 0).into()));
-        dbg!(grid.get_surrounding((1, 1).into()));
         assert_eq!(grid.get_surrounding((0, 1).into()).len(), 5);
         assert_eq!(grid.get_surrounding((0, 0).into()).len(), 3);
         assert_eq!(grid.get_surrounding((1, 1).into()).len(), 8);

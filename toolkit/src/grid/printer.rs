@@ -27,7 +27,7 @@ impl Color {
 
 pub struct GridPrinter<T>
 where
-    T: std::clone::Clone + std::fmt::Display,
+    T: std::fmt::Display,
 {
     grid: Grid<T>,
     colored: HashMap<Coordinate, Color>,
@@ -36,7 +36,7 @@ where
 
 impl<T> GridPrinter<T>
 where
-    T: std::clone::Clone + std::fmt::Display,
+    T: std::fmt::Display,
 {
     pub fn new(grid: Grid<T>) -> Self {
         Self {
