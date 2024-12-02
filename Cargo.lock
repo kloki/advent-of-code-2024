@@ -3,10 +3,25 @@
 version = 4
 
 [[package]]
+name = "anyhow"
+version = "1.0.93"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c95c10ba0b00a02636238b814946408b1322d5ac4760326e6fb8ec956d85775"
+
+[[package]]
 name = "colorize"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc17e449bc7854c50b943d113a98bc0e01dc6585d2c66eaa09ca645ebd8a7e62"
+
+[[package]]
+name = "component"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2d77c427b730ea6e0b7ff8f7fb93894a320c06256b3d553be7432788eaee6963"
+dependencies = [
+ "anyhow",
+]
 
 [[package]]
 name = "day-0-cookie-cutter"
@@ -26,8 +41,16 @@ dependencies = [
 name = "day-2-red-nosed-reports"
 version = "0.1.0"
 dependencies = [
+ "component",
+ "rust-analyzer",
  "toolkit",
 ]
+
+[[package]]
+name = "rust-analyzer"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11707871ffa56ce568d4f15dd34c2f891a2aa5e4b3435b99b8f99938492525c3"
 
 [[package]]
 name = "toolkit"
