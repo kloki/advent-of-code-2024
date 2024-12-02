@@ -8,12 +8,15 @@ pub struct Coordinate {
     pub column: usize,
 }
 
+impl Coordinate {
+    pub fn new(row: usize, column: usize) -> Self {
+        Self { row, column }
+    }
+}
+
 impl From<(usize, usize)> for Coordinate {
     fn from(tuple: (usize, usize)) -> Self {
-        Coordinate {
-            row: tuple.0,
-            column: tuple.1,
-        }
+        Self::new(tuple.0, tuple.1)
     }
 }
 
@@ -23,6 +26,14 @@ pub struct Grid<T> {
 }
 
 impl<T> Grid<T> {
+    pub fn new(input: Vec<Vec<T>>) -> Result<Self, &'static str> {
+        let width = input[0].len();
+        if input.iter().filter(|x| x.len() != width).count() != 0 {
+            Err("Not all rows have the same length.")
+        } else {
+            Ok(Grid { grid: input })
+        }
+    }
     pub fn get(&self, coor: Coordinate) -> Option<&T> {
         if coor.column > self.max_column() || coor.row > self.max_row() {
             return None;
@@ -77,16 +88,19 @@ impl<T> Grid<T> {
     }
 }
 
+impl<T: Clone> Grid<T> {
+    pub fn uniform(input: T, rows: usize, columns: usize) -> Self {
+        Self {
+            grid: vec![vec![input; columns]; rows],
+        }
+    }
+}
+
 impl<T> TryFrom<Vec<Vec<T>>> for Grid<T> {
     type Error = &'static str;
 
     fn try_from(input: Vec<Vec<T>>) -> Result<Self, Self::Error> {
-        let width = input[0].len();
-        if input.iter().filter(|x| x.len() != width).count() != 0 {
-            Err("Not all rows have the same length.")
-        } else {
-            Ok(Grid { grid: input })
-        }
+        Self::new(input)
     }
 }
 pub struct GridBorrow<'a, T> {
