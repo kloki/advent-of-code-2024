@@ -43,7 +43,7 @@ pub fn prune_input(input: String) -> Vec<String> {
     let mut work_input = input;
     let mut result = Vec::new();
     loop {
-        match work_input.split_once("don't") {
+        match work_input.split_once("don't()") {
             Some((included, remainder)) => {
                 result.push(included.to_string());
                 work_input = remainder.to_string()
@@ -53,8 +53,7 @@ pub fn prune_input(input: String) -> Vec<String> {
                 break;
             }
         }
-
-        match work_input.split_once("do") {
+        match work_input.split_once("do()") {
             Some((_, remainder)) => work_input = remainder.to_string(),
             None => {
                 break;
