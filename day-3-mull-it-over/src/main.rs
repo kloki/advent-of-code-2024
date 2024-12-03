@@ -24,37 +24,35 @@ impl Mul {
 
 fn parse_mulls(input: String) -> Vec<Mul> {
     let re = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
-    let mut muls = Vec::new();
-    for (_, [a, b]) in re.captures_iter(&input).map(|c| c.extract()) {
-        muls.push(Mul {
+    re.captures_iter(&input)
+        .map(|c| c.extract())
+        .map(|(_, [a, b])| Mul {
             a: a.parse().unwrap(),
             b: b.parse().unwrap(),
         })
-    }
-    muls
+        .collect()
 }
 
 pub fn calculate_complete_mulls(input: String) -> usize {
-    let mulls = parse_mulls(input);
-    mulls.iter().map(|x| x.calc()).sum()
+    parse_mulls(input).iter().map(|x| x.calc()).sum()
 }
 
 pub fn prune_input(input: String) -> Vec<String> {
-    let mut work_input = input;
+    let mut remainder = input;
     let mut result = Vec::new();
     loop {
-        match work_input.split_once("don't()") {
-            Some((included, remainder)) => {
+        match remainder.split_once("don't()") {
+            Some((included, new_remainder)) => {
                 result.push(included.to_string());
-                work_input = remainder.to_string()
+                remainder = new_remainder.to_string()
             }
             None => {
-                result.push(work_input);
+                result.push(remainder);
                 break;
             }
         }
-        match work_input.split_once("do()") {
-            Some((_, remainder)) => work_input = remainder.to_string(),
+        match remainder.split_once("do()") {
+            Some((_, new_remainder)) => remainder = new_remainder.to_string(),
             None => {
                 break;
             }
