@@ -1,4 +1,4 @@
 [workspace]
 
 resolver = "2"
-members = ["toolkit", "day-0-cookie-cutter", "day-1-historian-hysteria", "day-2-red-nosed-reports"]
+members = ["toolkit", "day-0-cookie-cutter", "day-1-historian-hysteria", "day-2-red-nosed-reports","day-3-mull-it-over"]
