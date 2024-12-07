@@ -46,14 +46,14 @@ impl<T> Grid<T> {
         self.planner
             .get_surrounding(coor)
             .iter()
-            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
+            .map(|x| (*x, &self.grid[x.row][x.column]))
             .collect::<Vec<_>>()
     }
     pub fn get_neighbors(&self, coor: &Coordinate) -> Vec<(Coordinate, &T)> {
         self.planner
             .get_neighbors(coor)
             .iter()
-            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
+            .map(|x| (*x, &self.grid[x.row][x.column]))
             .collect::<Vec<_>>()
     }
 
@@ -61,7 +61,7 @@ impl<T> Grid<T> {
         self.planner
             .cast_ray(coor, direction)
             .iter()
-            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
+            .map(|x| (*x, &self.grid[x.row][x.column]))
             .collect::<Vec<_>>()
     }
 }
