@@ -1,5 +1,5 @@
 use toolkit::{
-    grid::{Direction, Grid},
+    grid::{printer::GridPrinter, Direction, Grid},
     input::get_input,
 };
 
@@ -58,6 +58,36 @@ fn contains_x_mas_slant(input: &[char]) -> bool {
     is_diagonal_down && is_diagonal_up
 }
 
+fn printer(input: &[char], diagonal: bool) {
+    let grid: Grid<char> = Grid::new(vec![
+        vec![input[0], input[1], input[2]],
+        vec![input[3], 'A', input[4]],
+        vec![input[5], input[6], input[7]],
+    ])
+    .unwrap();
+    if diagonal {
+        println!(
+            "{}\n",
+            GridPrinter::new(grid)
+                .mark_red((0, 0).into())
+                .mark_red((2, 2).into())
+                .mark_red((0, 2).into())
+                .mark_red((2, 0).into())
+                .print()
+        )
+    } else {
+        println!(
+            "{}\n",
+            GridPrinter::new(grid)
+                .mark_red((0, 1).into())
+                .mark_red((2, 1).into())
+                .mark_red((1, 2).into())
+                .mark_red((1, 0).into())
+                .print()
+        )
+    }
+}
+
 fn count_x_mas(grid: Grid<char>) -> usize {
     let mut result = 0;
     for (coor, char) in grid.into_iter() {
@@ -69,9 +99,11 @@ fn count_x_mas(grid: Grid<char>) -> usize {
                 .collect();
             if contains_x_mas(&surrounding) {
                 result += 1;
+                printer(&surrounding, false);
             }
             if contains_x_mas_slant(&surrounding) {
                 result += 1;
+                printer(&surrounding, true);
             }
         }
     }
