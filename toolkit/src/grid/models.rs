@@ -1,6 +1,6 @@
 use std::fmt;
 
-use super::utils::{neighbor_coor, surrounding_coor};
+use super::planner::{Direction, GridPlanner};
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Coordinate {
@@ -23,24 +23,29 @@ impl From<(usize, usize)> for Coordinate {
 #[derive(Clone, Debug)]
 pub struct Grid<T> {
     pub grid: Vec<Vec<T>>,
+    planner: GridPlanner,
 }
 
 impl<T> Grid<T> {
     pub fn new(input: Vec<Vec<T>>) -> Result<Self, &'static str> {
+        let length = input.len();
         let width = input[0].len();
         if input.iter().filter(|x| x.len() != width).count() != 0 {
             Err("Not all rows have the same length.")
         } else {
-            Ok(Grid { grid: input })
+            Ok(Grid {
+                grid: input,
+                planner: GridPlanner::new(length, width),
+            })
         }
     }
-    pub fn get(&self, coor: Coordinate) -> Option<&T> {
+    pub fn get(&self, coor: &Coordinate) -> Option<&T> {
         if coor.column > self.max_column() || coor.row > self.max_row() {
             return None;
         }
         Some(&self.grid[coor.row][coor.column])
     }
-    pub fn get_mut(&mut self, coor: Coordinate) -> Option<&mut T> {
+    pub fn get_mut(&mut self, coor: &Coordinate) -> Option<&mut T> {
         if coor.column > self.max_column() || coor.row > self.max_row() {
             return None;
         }
@@ -55,35 +60,26 @@ impl<T> Grid<T> {
         self.grid[0].len() - 1
     }
 
-    pub fn get_surrounding(&self, coor: Coordinate) -> Vec<(Coordinate, &T)> {
-        let surrounding_coor =
-            surrounding_coor(coor.row, coor.column, self.max_row(), self.max_column());
-        surrounding_coor
+    pub fn get_surrounding(&self, coor: &Coordinate) -> Vec<(Coordinate, &T)> {
+        self.planner
+            .get_surrounding(coor)
             .iter()
-            .map(|x| {
-                (
-                    Coordinate {
-                        row: x.0,
-                        column: x.1,
-                    },
-                    &self.grid[x.0][x.1],
-                )
-            })
+            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
             .collect::<Vec<_>>()
     }
-    pub fn get_neighbors(&self, coor: Coordinate) -> Vec<(Coordinate, &T)> {
-        let neighbor_coor = neighbor_coor(coor.row, coor.column, self.max_row(), self.max_column());
-        neighbor_coor
+    pub fn get_neighbors(&self, coor: &Coordinate) -> Vec<(Coordinate, &T)> {
+        self.planner
+            .get_neighbors(coor)
             .iter()
-            .map(|x| {
-                (
-                    Coordinate {
-                        row: x.0,
-                        column: x.1,
-                    },
-                    &self.grid[x.0][x.1],
-                )
-            })
+            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
+            .collect::<Vec<_>>()
+    }
+
+    pub fn cast_ray(&self, coor: &Coordinate, direction: Direction) -> Vec<(Coordinate, &T)> {
+        self.planner
+            .cast_ray(coor, direction)
+            .iter()
+            .map(|x| (x.clone(), &self.grid[x.row][x.column]))
             .collect::<Vec<_>>()
     }
 }
@@ -92,6 +88,7 @@ impl<T: Clone> Grid<T> {
     pub fn uniform(input: T, rows: usize, columns: usize) -> Self {
         Self {
             grid: vec![vec![input; columns]; rows],
+            planner: GridPlanner::new(rows, columns),
         }
     }
 }
@@ -173,11 +170,11 @@ mod tests {
     #[test]
     fn test_grid_get() {
         let grid: Grid<usize> = vec![vec![0, 1], vec![2, 3]].try_into().unwrap();
-        let two = grid.get((1, 0).into());
+        let two = grid.get(&(1, 0).into());
 
         assert_eq!(*two.unwrap(), 2);
 
-        let not_exist = grid.get((9, 9).into());
+        let not_exist = grid.get(&(9, 9).into());
         assert!(not_exist.is_none())
     }
     #[test]
@@ -185,9 +182,9 @@ mod tests {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        assert_eq!(grid.get_surrounding((0, 1).into()).len(), 5);
-        assert_eq!(grid.get_surrounding((0, 0).into()).len(), 3);
-        assert_eq!(grid.get_surrounding((1, 1).into()).len(), 8);
+        assert_eq!(grid.get_surrounding(&(0, 1).into()).len(), 5);
+        assert_eq!(grid.get_surrounding(&(0, 0).into()).len(), 3);
+        assert_eq!(grid.get_surrounding(&(1, 1).into()).len(), 8);
     }
 
     #[test]
@@ -195,8 +192,20 @@ mod tests {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        assert_eq!(grid.get_neighbors((0, 1).into()).len(), 3);
-        assert_eq!(grid.get_neighbors((0, 0).into()).len(), 2);
-        assert_eq!(grid.get_neighbors((1, 1).into()).len(), 4);
+        assert_eq!(grid.get_neighbors(&(0, 1).into()).len(), 3);
+        assert_eq!(grid.get_neighbors(&(0, 0).into()).len(), 2);
+        assert_eq!(grid.get_neighbors(&(1, 1).into()).len(), 4);
+    }
+
+    #[test]
+    fn test_grid_cast_ray() {
+        let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
+            .try_into()
+            .unwrap();
+        assert_eq!(
+            grid.cast_ray(&(0, 0).into(), Direction::LowerRight).len(),
+            3
+        );
+        assert_eq!(grid.cast_ray(&(0, 0).into(), Direction::Left).len(), 1);
     }
 }
