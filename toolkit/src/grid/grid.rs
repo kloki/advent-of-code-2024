@@ -66,6 +66,24 @@ impl<T> Grid<T> {
     }
 }
 
+impl<T: Eq + PartialEq> Grid<T> {
+    pub fn march_until(
+        &self,
+        coor: &Coordinate,
+        direction: Direction,
+        check: T,
+    ) -> Vec<(Coordinate, &T)> {
+        let mut march = self.march(coor, direction);
+        match march.iter().position(|(_, value)| **value == check) {
+            Some(index) => {
+                march.truncate(index + 1);
+                march
+            }
+            None => march,
+        }
+    }
+}
+
 impl<T: Clone> Grid<T> {
     pub fn uniform(input: T, rows: usize, columns: usize) -> Self {
         Self {
@@ -186,5 +204,22 @@ mod tests {
             .unwrap();
         assert_eq!(grid.march(&(0, 0).into(), Direction::DownRight).len(), 3);
         assert_eq!(grid.march(&(0, 0).into(), Direction::Left).len(), 1);
+    }
+
+    #[test]
+    fn test_grid_march_until() {
+        let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
+            .try_into()
+            .unwrap();
+        assert_eq!(
+            grid.march_until(&(0, 0).into(), Direction::DownRight, 5)
+                .len(),
+            2
+        );
+        assert_eq!(
+            grid.march_until(&(0, 0).into(), Direction::DownRight, 99)
+                .len(),
+            3
+        );
     }
 }
