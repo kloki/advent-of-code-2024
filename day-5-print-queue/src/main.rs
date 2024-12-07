@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use toolkit::input::get_input;
 
+type Priorities = HashMap<(usize, usize), Priority>;
+
 #[derive(Debug)]
 struct Rule {
     pub before: usize,
@@ -12,6 +14,11 @@ struct Rule {
 struct Update {
     pub middle: usize,
     rank: HashMap<usize, usize>,
+}
+
+enum Priority {
+    Up,
+    Down,
 }
 
 impl Update {
@@ -35,9 +42,31 @@ impl Update {
         true
     }
 
-    pub fn fix(&self, rules: &Vec<Rule>) -> Self {
-        self.clone()
+    pub fn fix(&self, rules: &Priorities) -> Self {
+        let values = self.rank.keys().collect::<Vec<_>>();
+        let mut new_working = vec![];
+        for value in values {
+            for (i, new) in new_working.iter().enumerate() {
+                if let Some(Priority::Up) = rules.get(&(*value, *new)) {
+                    new_working.insert(i, *value);
+                    break;
+                }
+            }
+            if !new_working.contains(value) {
+                new_working.push(*value)
+            }
+        }
+        Self::new(new_working)
     }
+}
+
+fn build_priorities(rules: &Vec<Rule>) -> Priorities {
+    let mut result = HashMap::new();
+    for rule in rules {
+        result.insert((rule.before, rule.after), Priority::Up);
+        result.insert((rule.after, rule.before), Priority::Down);
+    }
+    result
 }
 
 fn main() {
@@ -51,10 +80,11 @@ fn main() {
         .sum();
     println!("Solution 1 {}", score);
 
+    let priorities = build_priorities(&rules);
     let score: usize = updates
         .iter()
         .filter(|u| !u.is_correct(&rules))
-        .map(|u| u.fix(&rules))
+        .map(|u| u.fix(&priorities))
         .map(|u| u.middle)
         .sum();
     println!("Solution 2 {}", score);
@@ -72,6 +102,7 @@ fn parse_input(input: String) -> (Vec<Rule>, Vec<Update>) {
             }
         })
         .collect::<Vec<Rule>>();
+
     let updates = split[1]
         .split("\n")
         .map(|line| {
@@ -87,7 +118,6 @@ fn parse_input(input: String) -> (Vec<Rule>, Vec<Update>) {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     const TEST_INPUT: &str = "47|53
 97|13
 97|61
@@ -133,10 +163,11 @@ mod tests {
     fn test_5_middle_number_wrong() {
         let (rules, updates) = parse_input(TEST_INPUT.to_string());
 
+        let priorities = build_priorities(&rules);
         let score: usize = updates
             .iter()
             .filter(|u| !u.is_correct(&rules))
-            .map(|u| u.fix(&rules))
+            .map(|u| u.fix(&priorities))
             .map(|u| u.middle)
             .sum();
         assert_eq!(score, 123)
