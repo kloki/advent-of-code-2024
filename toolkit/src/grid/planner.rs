@@ -1,4 +1,6 @@
 use super::models::Coordinate;
+
+#[derive(Clone, Debug)]
 pub enum Direction {
     UpperLeft,
     Upper,
@@ -8,6 +10,21 @@ pub enum Direction {
     LowerLeft,
     Lower,
     LowerRight,
+}
+
+impl Direction {
+    pub fn all() -> [Direction; 8] {
+        [
+            Direction::UpperLeft,
+            Direction::Upper,
+            Direction::UpperRight,
+            Direction::Left,
+            Direction::Right,
+            Direction::LowerLeft,
+            Direction::Lower,
+            Direction::LowerRight,
+        ]
+    }
 }
 
 #[derive(Clone, Debug)]

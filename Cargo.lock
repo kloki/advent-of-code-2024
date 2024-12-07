@@ -65,6 +65,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "day-4-ceres-search"
+version = "0.1.0"
+dependencies = [
+ "toolkit",
+]
+
+[[package]]
 name = "either"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -6,8 +6,12 @@ fn main() {
 }
 #[cfg(test)]
 mod tests {
+
+    const TEST_INPUT: &str = "
+hello world
+";
     #[test]
     fn test_0_cookie_cutter() {
-        assert_eq!(1, 1)
+        assert_eq!(TEST_INPUT, "\nhello world\n")
     }
 }
