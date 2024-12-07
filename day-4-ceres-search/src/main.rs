@@ -24,7 +24,7 @@ fn count_xmas(grid: Grid<char>) -> usize {
         if *char == 'X' {
             for d in Direction::all() {
                 if contains_xmas(
-                    grid.cast_ray(&coor, d)
+                    grid.march(&coor, d)
                         .iter()
                         .map(|(_, value)| **value)
                         .collect(),

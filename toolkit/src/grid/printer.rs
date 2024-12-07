@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use colorize::AnsiColor;
 
-use super::models::{Coordinate, Grid};
+use super::{coordinate::Coordinate, grid::Grid};
 
 #[derive(Clone, Copy, Debug)]
 enum Color {

@@ -1,24 +1,6 @@
 use std::fmt;
 
-use super::planner::{Direction, GridPlanner};
-
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-pub struct Coordinate {
-    pub row: usize,
-    pub column: usize,
-}
-
-impl Coordinate {
-    pub fn new(row: usize, column: usize) -> Self {
-        Self { row, column }
-    }
-}
-
-impl From<(usize, usize)> for Coordinate {
-    fn from(tuple: (usize, usize)) -> Self {
-        Self::new(tuple.0, tuple.1)
-    }
-}
+use super::{coordinate::Coordinate, direction::Direction, planner::GridPlanner};
 
 #[derive(Clone, Debug)]
 pub struct Grid<T> {
@@ -75,7 +57,7 @@ impl<T> Grid<T> {
             .collect::<Vec<_>>()
     }
 
-    pub fn cast_ray(&self, coor: &Coordinate, direction: Direction) -> Vec<(Coordinate, &T)> {
+    pub fn march(&self, coor: &Coordinate, direction: Direction) -> Vec<(Coordinate, &T)> {
         self.planner
             .cast_ray(coor, direction)
             .iter()
@@ -198,14 +180,11 @@ mod tests {
     }
 
     #[test]
-    fn test_grid_cast_ray() {
+    fn test_grid_march() {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        assert_eq!(
-            grid.cast_ray(&(0, 0).into(), Direction::LowerRight).len(),
-            3
-        );
-        assert_eq!(grid.cast_ray(&(0, 0).into(), Direction::Left).len(), 1);
+        assert_eq!(grid.march(&(0, 0).into(), Direction::LowerRight).len(), 3);
+        assert_eq!(grid.march(&(0, 0).into(), Direction::Left).len(), 1);
     }
 }

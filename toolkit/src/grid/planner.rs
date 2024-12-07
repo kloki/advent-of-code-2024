@@ -1,31 +1,4 @@
-use super::models::Coordinate;
-
-#[derive(Clone, Debug)]
-pub enum Direction {
-    UpperLeft,
-    Upper,
-    UpperRight,
-    Left,
-    Right,
-    LowerLeft,
-    Lower,
-    LowerRight,
-}
-
-impl Direction {
-    pub fn all() -> [Direction; 8] {
-        [
-            Direction::UpperLeft,
-            Direction::Upper,
-            Direction::UpperRight,
-            Direction::Left,
-            Direction::Right,
-            Direction::LowerLeft,
-            Direction::Lower,
-            Direction::LowerRight,
-        ]
-    }
-}
+use super::{coordinate::Coordinate, direction::Direction};
 
 #[derive(Clone, Debug)]
 pub struct GridPlanner {
