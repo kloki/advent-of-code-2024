@@ -8,4 +8,5 @@ members = [
   "day-2-red-nosed-reports",
   "day-3-mull-it-over",
   "day-4-ceres-search",
+  "day-5-print-queue",
 ]
