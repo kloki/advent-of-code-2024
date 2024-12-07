@@ -101,14 +101,14 @@ impl GridPlanner {
 
     pub fn get_direction(&self, coor: &Coordinate, direction: &Direction) -> Option<Coordinate> {
         match direction {
-            Direction::UpperLeft => self.get_upper_left(coor),
-            Direction::Upper => self.get_upper(coor),
-            Direction::UpperRight => self.get_upper_right(coor),
+            Direction::UpLeft => self.get_upper_left(coor),
+            Direction::Up => self.get_upper(coor),
+            Direction::UpRight => self.get_upper_right(coor),
             Direction::Left => self.get_left(coor),
             Direction::Right => self.get_right(coor),
-            Direction::LowerLeft => self.get_lower_left(coor),
-            Direction::Lower => self.get_lower(coor),
-            Direction::LowerRight => self.get_lower_right(coor),
+            Direction::DownLeft => self.get_lower_left(coor),
+            Direction::Down => self.get_lower(coor),
+            Direction::DownRight => self.get_lower_right(coor),
         }
     }
 

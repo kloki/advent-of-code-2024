@@ -184,7 +184,7 @@ mod tests {
         let grid: Grid<usize> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .try_into()
             .unwrap();
-        assert_eq!(grid.march(&(0, 0).into(), Direction::LowerRight).len(), 3);
+        assert_eq!(grid.march(&(0, 0).into(), Direction::DownRight).len(), 3);
         assert_eq!(grid.march(&(0, 0).into(), Direction::Left).len(), 1);
     }
 }
