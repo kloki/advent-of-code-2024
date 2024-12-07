@@ -1,5 +1,5 @@
 use std::fmt;
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Coordinate {
     pub row: usize,
     pub column: usize,

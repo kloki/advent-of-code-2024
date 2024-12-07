@@ -9,4 +9,5 @@ members = [
   "day-3-mull-it-over",
   "day-4-ceres-search",
   "day-5-print-queue",
+  "day-6-guard-gallivant",
 ]

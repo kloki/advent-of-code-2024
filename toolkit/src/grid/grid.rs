@@ -71,15 +71,15 @@ impl<T: Eq + PartialEq> Grid<T> {
         &self,
         coor: &Coordinate,
         direction: Direction,
-        check: T,
-    ) -> Vec<(Coordinate, &T)> {
+        check: &T,
+    ) -> (Vec<(Coordinate, &T)>, bool) {
         let mut march = self.march(coor, direction);
-        match march.iter().position(|(_, value)| **value == check) {
+        match march.iter().position(|(_, value)| *value == check) {
             Some(index) => {
-                march.truncate(index + 1);
-                march
+                march.truncate(index);
+                (march, true)
             }
-            None => march,
+            None => (march, false),
         }
     }
 }
@@ -212,14 +212,31 @@ mod tests {
             .try_into()
             .unwrap();
         assert_eq!(
-            grid.march_until(&(0, 0).into(), Direction::DownRight, 5)
+            grid.march_until(&(0, 0).into(), Direction::DownRight, &5)
+                .0
                 .len(),
-            2
+            1
         );
+
+        assert!(grid.march_until(&(0, 0).into(), Direction::DownRight, &5).1);
         assert_eq!(
-            grid.march_until(&(0, 0).into(), Direction::DownRight, 99)
+            grid.march_until(&(0, 0).into(), Direction::DownRight, &99)
+                .0
                 .len(),
             3
         );
+        assert!(
+            !grid
+                .march_until(&(0, 0).into(), Direction::DownRight, &99)
+                .1
+        );
+
+        assert_eq!(
+            grid.march_until(&(0, 0).into(), Direction::DownRight, &1)
+                .0
+                .len(),
+            0
+        );
+        assert!(grid.march_until(&(0, 0).into(), Direction::DownRight, &1).1);
     }
 }
