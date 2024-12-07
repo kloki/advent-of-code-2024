@@ -10,4 +10,5 @@ members = [
   "day-4-ceres-search",
   "day-5-print-queue",
   "day-6-guard-gallivant",
+  "day-7-bridge-repair",
 ]
