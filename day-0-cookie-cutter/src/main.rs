@@ -6,12 +6,13 @@ fn main() {
 }
 #[cfg(test)]
 mod tests {
+    use super::*;
 
     const TEST_INPUT: &str = "
 hello world
 ";
     #[test]
     fn test_0_cookie_cutter() {
-        assert_eq!(TEST_INPUT, "\nhello world\n")
+        assert_ne!(TEST_INPUT, get_input())
     }
 }
