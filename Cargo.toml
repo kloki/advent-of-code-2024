@@ -11,4 +11,5 @@ members = [
   "day-5-print-queue",
   "day-6-guard-gallivant",
   "day-7-bridge-repair",
+  "day-8-resonant-collinearity",
 ]
